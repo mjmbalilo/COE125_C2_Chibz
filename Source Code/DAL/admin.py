@@ -69,4 +69,26 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
- 
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.gbFlightDetails.setTitle(_translate("MainWindow", "Flight Details"))
+        self.label.setText(_translate("MainWindow", "Flights:"))
+        self.label_2.setText(_translate("MainWindow", "Location:"))
+        self.label_3.setText(_translate("MainWindow", "Departure:"))
+        self.label_4.setText(_translate("MainWindow", "Arrival:"))
+        self.label_5.setText(_translate("MainWindow", "Price:"))
+        self.label_6.setText(_translate("MainWindow", "Available Seats:"))
+        self.gbFlightDetails_2.setTitle(_translate("MainWindow", "Passengers"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+    
+
