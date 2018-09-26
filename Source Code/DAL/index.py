@@ -40,7 +40,6 @@ class Ui_LoginWindow(object):
         else:
             self.showMessageBox("Error", "Username: " + username + "\nPassword: " + password)
 
-class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(464, 379)
