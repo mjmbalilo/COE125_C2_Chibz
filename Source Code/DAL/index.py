@@ -7,6 +7,38 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+class Ui_LoginWindow(object):
+
+    def showMessageBox(self,title,message):
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIcon(QtWidgets.QMessageBox.Warning)
+        msgBox.setWindowTitle(title)
+        msgBox.setText(message)
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msgBox.exec_()
+
+    def signUpShow(self):
+        self.SignUpWindow = QtWidgets.QDialog()
+        self.ui = Ui_SignupWindow()
+        self.ui.setupUi(self.SignUpWindow)
+        self.SignUpWindow.show()
+
+    def adminShow(self):
+        self.AdminWindow = QtWidgets.QDialog()
+        self.ui = Ui_AdminWindow()
+        self.ui.setupUi(self.AdminWindow)
+        self.AdminWindow.show()
+
+    def loginCheck(self):
+        adminUsername = "admin"
+        adminPassword = "admin"
+        username = self.txtUsername.text()
+        password = self.txtPassword.text()
+
+        if (username == adminUsername) and (password == adminPassword):
+            self.adminShow()
+        else:
+            self.showMessageBox("Error", "Username: " + username + "\nPassword: " + password)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -55,6 +87,9 @@ class Ui_Dialog(object):
         self.txtPassword.setFont(font)
         self.txtPassword.setObjectName("txtPassword")
 
+        self.btnLogin.clicked.connect(self.loginCheck)
+        self.btnSignUp.clicked.connect(self.signUpShow)
+        
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
