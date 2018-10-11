@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>SignupWindow</class>
+ <widget class="QDialog" name="SignupWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -136,10 +136,40 @@
      <x>360</x>
      <y>40</y>
      <width>281</width>
-     <height>211</height>
+     <height>287</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QLabel" name="label_9">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Address:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="txtAddress1">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="txtAddress2">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
+    </item>
     <item>
      <widget class="QLabel" name="label_5">
       <property name="font">
@@ -180,6 +210,19 @@
         <pointsize>14</pointsize>
        </font>
       </property>
+      <property name="currentText">
+       <string>Male</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>Male</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Female</string>
+       </property>
+      </item>
      </widget>
     </item>
     <item>
