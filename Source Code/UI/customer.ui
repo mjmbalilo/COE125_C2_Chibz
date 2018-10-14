@@ -184,8 +184,8 @@
        <widget class="QLabel" name="label_9">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>40</y>
+          <x>30</x>
+          <y>70</y>
           <width>71</width>
           <height>31</height>
          </rect>
@@ -196,28 +196,7 @@
          </font>
         </property>
         <property name="text">
-         <string>From:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_10">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>90</y>
-          <width>81</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Time:</string>
+         <string>Date:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -226,21 +205,24 @@
        <widget class="QDateEdit" name="txtDate">
         <property name="geometry">
          <rect>
-          <x>100</x>
-          <y>40</y>
+          <x>110</x>
+          <y>70</y>
           <width>211</width>
           <height>31</height>
          </rect>
         </property>
-       </widget>
-       <widget class="QComboBox" name="cbxTime">
-        <property name="geometry">
-         <rect>
-          <x>100</x>
-          <y>90</y>
-          <width>211</width>
-          <height>31</height>
-         </rect>
+        <property name="dateTime">
+         <datetime>
+          <hour>0</hour>
+          <minute>0</minute>
+          <second>0</second>
+          <year>2018</year>
+          <month>11</month>
+          <day>12</day>
+         </datetime>
+        </property>
+        <property name="displayFormat">
+         <string>M/d/yyyy</string>
         </property>
        </widget>
       </widget>
@@ -393,7 +375,7 @@
          <x>10</x>
          <y>70</y>
          <width>154</width>
-         <height>251</height>
+         <height>281</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -406,7 +388,23 @@
            </font>
           </property>
           <property name="text">
-           <string>Location:</string>
+           <string>Origin</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_19">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Destination</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -423,6 +421,22 @@
           </property>
           <property name="text">
            <string>Travel Date:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_20">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Travel Time:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -485,12 +499,22 @@
          <x>170</x>
          <y>70</y>
          <width>181</width>
-         <height>251</height>
+         <height>281</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
-         <widget class="QLabel" name="lblLocation">
+         <widget class="QLabel" name="lblOrigin">
+          <property name="text">
+           <string>&lt;location&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblDestination">
           <property name="text">
            <string>&lt;location&gt;</string>
           </property>
@@ -503,6 +527,16 @@
          <widget class="QLabel" name="lblTravelDate">
           <property name="text">
            <string>&lt;travel date&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblTravelTime">
+          <property name="text">
+           <string>&lt;travel time&gt;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1059,6 +1093,19 @@
          <string>Change Password</string>
         </property>
        </widget>
+      </widget>
+      <widget class="QPushButton" name="btnLogout">
+       <property name="geometry">
+        <rect>
+         <x>640</x>
+         <y>20</y>
+         <width>181</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Logout</string>
+       </property>
       </widget>
      </widget>
     </widget>
