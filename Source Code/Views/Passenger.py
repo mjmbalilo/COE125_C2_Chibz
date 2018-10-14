@@ -2,9 +2,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Passenger(object):
-    def setupUi(self, Passenger):
-
+class Ui_PassengerWindow(object):
+    def setupUi(self, Passenger, passengerInfo):
+        self.passengerTxtUi = {}
         ###################################################################### 
         Passenger.setObjectName("Passenger")
         Passenger.resize(560, 670)
@@ -16,12 +16,12 @@ class Ui_Passenger(object):
         self.scrlOuterContents = QtWidgets.QWidget()
         self.formOuter = QtWidgets.QFormLayout(self.scrlOuterContents)
 
-        self.GenerateForm("Adult", 5)
-        self.formOuter.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.gb)
-        self.GenerateForm("Infant", 3)
-        self.formOuter.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.gb)
-        self.GenerateForm("Child", 3)
-        self.formOuter.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.gb)
+        i = 1
+        for age in passengerInfo:
+            if(int(passengerInfo[age]) > 0):
+                self.GenerateForm(str(age), int(passengerInfo[age]))
+                self.formOuter.setWidget(i, QtWidgets.QFormLayout.FieldRole, self.gb)
+                i += 1
 
 
         self.scrlOuter.setEnabled(True)
@@ -36,7 +36,7 @@ class Ui_Passenger(object):
         font.setPointSize(14)
         self.btnAddPassenger.setFont(font)
         self.grdOuter.addWidget(self.btnAddPassenger, 1, 0, 1, 1)
-        self.btnAddPassenger.clicked.connect(self.MessageBox)
+        #self.btnAddPassenger.clicked.connect(self.PassengerInfo)
 
         self.retranslateUi(Passenger)
         QtCore.QMetaObject.connectSlotsByName(Passenger)
@@ -49,9 +49,7 @@ class Ui_Passenger(object):
     def GenerateForm(self, age, passengerNum):
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.FName = []
-        self.LName = []
-        self.Gender = []
+        txtUi = []
         
         self.gb = QtWidgets.QGroupBox(self.scrlOuterContents)        
         self.grdInner = QtWidgets.QGridLayout(self.gb)
@@ -71,41 +69,61 @@ class Ui_Passenger(object):
             self.grdForm = QtWidgets.QGridLayout(self.gbAge)          
             self.txtFName = QtWidgets.QLineEdit(self.gbAge)
             self.txtLName = QtWidgets.QLineEdit(self.gbAge)
-            self.txtGender = QtWidgets.QLineEdit(self.gbAge)   
+            self.cbxGender = QtWidgets.QComboBox(self.gbAge)   
             self.lblFName = QtWidgets.QLabel(self.gbAge)
             self.lblLName = QtWidgets.QLabel(self.gbAge)
             self.lblGender = QtWidgets.QLabel(self.gbAge)
-            self.FName.append(self.txtFName)
-            self.LName.append(self.txtLName)
-            self.Gender.append(self.txtGender)
-            
+            info = [self.txtFName, self.txtLName, self.cbxGender]
+            txtUi.append(info)            
 
             #Design 
             self.gbAge.setTitle("%s %d: " %(age, x))
             self.lblFName.setText("First Name:")
             self.lblLName.setText("Last Name:")
             self.lblGender.setText("Gender:")
+            self.cbxGender.addItem("Male")
+            self.cbxGender.addItem("Female")
             self.grdForm.setContentsMargins(10, 10, 10, 10)
             self.grdForm.addWidget(self.lblFName, 0, 0, 1, 1)
             self.grdForm.addWidget(self.lblLName, 1, 0, 1, 1)
             self.grdForm.addWidget(self.lblGender, 2, 0, 1, 1)
             self.grdForm.addWidget(self.txtFName, 0, 2, 1, 1)
             self.grdForm.addWidget(self.txtLName, 1, 2, 1, 1)
-            self.grdForm.addWidget(self.txtGender, 2, 2, 1, 1)
+            self.grdForm.addWidget(self.cbxGender, 2, 2, 1, 1)
             self.formInner.setWidget(x, QtWidgets.QFormLayout.FieldRole, self.gbAge)
+            
+        self.passengerTxtUi[age] = txtUi
 
-    def MessageBox(self):
-        self.msgBox = QtWidgets.QMessageBox()
-        self.msgBox.setText(self.FName[0].text())
-        self.msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-        self.msgBox.exec_()
+
+    @property
+    def PassengerInfo(self):
+        passengerInfo = {}
+        for age in self.passengerTxtUi:
+            info = []
+            for txtUi in self.passengerTxtUi[age]:
+                txt = []
+                i = 1
+                for obj in txtUi:
+                    if (i == 3):
+                        txt.append(obj.currentText())
+                    else:
+                        txt.append(obj.text())
+                        if(obj.text() == ''):
+                            raise Exception('Please fill up all required fields!')
+                    i += 1
+                info.append(txt)
+            passengerInfo[age] = info
+
+        return passengerInfo
+            
 
 if __name__ == "__main__":
     import sys
+    passInfo = [2, 1, 0, 0]
     app = QtWidgets.QApplication(sys.argv)
     Passenger = QtWidgets.QDialog()
-    ui = Ui_Passenger()
-    ui.setupUi(Passenger)
+    ui = Ui_PassengerWindow()
+    ui.setupUi(Passenger, passInfo)
     Passenger.show()
     sys.exit(app.exec_())
 
