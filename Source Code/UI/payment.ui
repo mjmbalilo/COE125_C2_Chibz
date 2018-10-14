@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>PaymentWindow</class>
+ <widget class="QDialog" name="PaymentWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -39,7 +39,29 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QComboBox" name="cbxCard"/>
+      <widget class="QComboBox" name="cbxCard">
+       <property name="currentText">
+        <string>Mastercard</string>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <item>
+        <property name="text">
+         <string>Mastercard</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Visa Card</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>JBC</string>
+        </property>
+       </item>
+      </widget>
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_3">
@@ -61,17 +83,28 @@
      <item row="2" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QComboBox" name="comboBox"/>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboBox_2"/>
+        <widget class="QDateEdit" name="txtExpDate">
+         <property name="dateTime">
+          <datetime>
+           <hour>0</hour>
+           <minute>0</minute>
+           <second>0</second>
+           <year>2018</year>
+           <month>12</month>
+           <day>1</day>
+          </datetime>
+         </property>
+         <property name="displayFormat">
+          <string>M/yyyy</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
     </layout>
    </item>
    <item row="2" column="0">
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="btnConfirmFlight">
      <property name="text">
       <string>Confirm Flight</string>
      </property>
@@ -178,7 +211,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
+        <item row="4" column="0">
          <widget class="QLabel" name="label_24">
           <property name="font">
            <font>
@@ -195,7 +228,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="4" column="1">
          <widget class="QLabel" name="lblPrice">
           <property name="text">
            <string>&lt;price&gt;</string>
@@ -205,7 +238,7 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
+        <item row="5" column="0">
          <widget class="QLabel" name="label_26">
           <property name="font">
            <font>
@@ -222,7 +255,7 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
+        <item row="6" column="0">
          <widget class="QLabel" name="label_25">
           <property name="font">
            <font>
@@ -239,7 +272,7 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="1">
+        <item row="6" column="1">
          <widget class="QLabel" name="lblTotalPrice">
           <property name="text">
            <string>&lt;totalPrice&gt;</string>
@@ -249,7 +282,7 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
+        <item row="5" column="1">
          <widget class="QLabel" name="lblPassengers">
           <property name="text">
            <string>&lt;passengers&gt;</string>
@@ -258,6 +291,26 @@
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
          </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_27">
+          <property name="font">
+           <font>
+            <pointsize>14</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Travel Time:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="cbxTime"/>
         </item>
        </layout>
       </item>
