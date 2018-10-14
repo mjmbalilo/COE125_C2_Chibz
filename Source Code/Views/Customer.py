@@ -521,4 +521,3 @@ if __name__ == "__main__":
     ui.setupUi(CustomerWindow)
     CustomerWindow.show()
     sys.exit(app.exec_())
-
