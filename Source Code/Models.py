@@ -116,12 +116,13 @@ class Users(Models):
                 INSERT INTO User(FNAME, LNAME, EMAIL, USERNAME, PASSWORD, ADDRESS, DATEBIRTH, GENDER, CONTACTNUM) 
                 VALUES(?,?,?,?,?,?,?,?,?)'''
             db = dbHelper(self.dataSource)
-            db.ExecuteCommand(sqlCommand, userInfo)
             db.ExecuteCommand("SELECT * FROM Admin WHERE USERNAME = '%s'" %userInfo[3])
-            if db.Data != ():
-                raise Exception('Invalid username!')
+            if db.Data is not None:
+                print(db.Data)
+                raise Exception('Username already exists!')
+            db.ExecuteCommand(sqlCommand, userInfo)
             if(db.HasError):
-                raise Exception(db.ErrorMessage)
+                raise Exception("Username already exists!")
             self.HasError = False
         except Exception as e:
             self.HasError = True
