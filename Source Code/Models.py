@@ -25,6 +25,52 @@ class Models:
     def ErrorMessage(self, errorMessage):
         self.__errorMessage = errorMessage
 
+#Admin Class(Models):
+class Admin(Models):
+    admin = None
+
+    @property
+    def Admin(self):
+        return self.admin
+    def FindAdmin(self, username = None, password = None, adminID = None):
+        try:
+            db = dbHelper(self.dataSource)
+            if adminID is not None:
+                db.ExecuteCommand("SELECT * FROM Admin WHERE AdminID = " + str(adminID))
+            else:
+                db.ExecuteCommand("SELECT * FROM Admin WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'")
+            self.admin = db.Data
+            db.ExecuteCommand("SELECT * FROM User WHERE USERNAME = '%s'" %username)
+            if(db.HasError):
+                raise Exception(db.ErrorMessage)
+            self.HasError = False
+        except Exception as e:
+            self.HasError = True
+            self.ErrorMessage = str(e)
+    def UpdateAdminUsername(self, adminID = None, username = None):
+        try:
+            db = dbHelper(self.dataSource)
+            db.ExecuteCommand("UPDATE Admin SET Username = '%s' WHERE AdminID = %s;" %(username, str(adminID)))
+            db.ExecuteCommand("SELECT * FROM User WHERE USERNAME = '%s'" %username)
+            if db.Data != ():
+                raise Exception('Invalid username!')
+            if(db.HasError):
+                raise Exception(db.ErrorMessage)
+            self.HasError = False
+        except Exception as e:
+            self.HasError = True
+            self.ErrorMessage = str(e)
+    def UpdateAdminPassword(self, adminID = None, password = None):
+        try:
+            db = dbHelper(self.dataSource)
+            db.ExecuteCommand("UPDATE Admin SET Password = '%s' WHERE AdminID = %s;" %(password, str(adminID)))
+            if(db.HasError):
+                raise Exception(db.ErrorMessage)
+            self.HasError = False
+        except Exception as e:
+            self.HasError = True
+            self.ErrorMessage = str(e)
+
 #Users Class
 class Users(Models):
     user = None
@@ -71,6 +117,9 @@ class Users(Models):
                 VALUES(?,?,?,?,?,?,?,?,?)'''
             db = dbHelper(self.dataSource)
             db.ExecuteCommand(sqlCommand, userInfo)
+            db.ExecuteCommand("SELECT * FROM Admin WHERE USERNAME = '%s'" %userInfo[3])
+            if db.Data != ():
+                raise Exception('Invalid username!')
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
             self.HasError = False
@@ -80,7 +129,8 @@ class Users(Models):
     def DeleteUser(self, userID):
         try:
             db = dbHelper(self.dataSource)
-            db.ExecuteCommand("DELETE User WHERE UserID = " + userID)
+            db.ExecuteCommand("DELETE FROM USER WHERE UserID = " + str(userID))
+            db.ExecuteCommand("DELETE FROM PASSENGER WHERE UserID = " + str(userID))
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
             self.HasError = False
@@ -90,7 +140,7 @@ class Users(Models):
     def UpdateUserPassword(self, userID, password):
         try:
             db = dbHelper(self.dataSource)
-            db.ExecuteCommand("UPDATE User SET PASSWORD = '" + password + "' WHERE Flight = " + userID)
+            db.ExecuteCommand("UPDATE User SET PASSWORD = '" + password + "' WHERE UserID = " + str(userID))
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
             self.HasError = False
@@ -100,7 +150,7 @@ class Users(Models):
     def ViewUser(self, userID):
         try:
             db = dbHelper(self.dataSource)
-            db.ExecuteCommand("SELECT * FROM User WHERE UserID = " + userID)
+            db.ExecuteCommand("SELECT * FROM User WHERE UserID = " + str(userID))
             self.user = db.Data
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
@@ -120,11 +170,27 @@ class Flights(Models):
     @property
     def AllFlight(self):
         return self.allFlight
-    def FindFlight(self, flightID):
+    def FindFlight(self, flightID = None, flightInfo = None, time = None):
         try:
             db = dbHelper(self.dataSource)
-            db.ExecuteCommand("Select * From Flight Where FlightID = " + flightID)
-            self.flight = db.Data
+            if(flightID is not None):
+                db.ExecuteCommand("Select * From Flight Where FlightID = " + flightID)
+                self.flight = db.Data
+            elif(flightInfo is not None and time is None):
+                cmd = '''SELECT * FROM FLIGHT
+                        WHERE FLIGHT.ORIGINID = %s
+                        AND FLIGHT.DESTINATIONID = %s
+                        AND TRAVELDATE = '%s';''' % (str(flightInfo[0]), str(flightInfo[1]), str(flightInfo[2]))
+                db.ExecuteCommand(cmd)
+                self.flight = db.DataTable
+            elif(time is not None):
+                cmd = '''SELECT * FROM FLIGHT
+                        WHERE FLIGHT.ORIGINID = %s
+                        AND FLIGHT.DESTINATIONID = %s
+                        AND TRAVELDATE = '%s'
+                        AND TRAVELTIME = '%s';''' % (str(flightInfo[0]), str(flightInfo[1]), str(flightInfo[2]), str(time))
+                db.ExecuteCommand(cmd)
+                self.flight = db.Data
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
             self.HasError = False
@@ -145,8 +211,8 @@ class Flights(Models):
     def AddFlight(self, flightInfo):
         try:
             sqlCommand = '''
-                INSERT INTO Flight(ORIGINID, DESTINATIONID, PRICE, TRAVELDATE, TRAVELTIME, REMARKS) 
-                VALUES(?,?,?,?,?,?,?,?,?)'''
+                INSERT INTO Flight(ORIGINID, DESTINATIONID, PRICE, TRAVELDATE, TRAVELTIME, REMARKS, SEATS) 
+                VALUES(?,?,?,?,?,?,?)'''
             db = dbHelper(self.dataSource)
             db.ExecuteCommand(sqlCommand, flightInfo)
             if(db.HasError):
@@ -154,11 +220,13 @@ class Flights(Models):
             self.HasError = False
         except Exception as e:
             self.HasError = True
-            self.ErrorMessage = str(e) 
+            self.ErrorMessage = str(e)
+            print('Add Flight Error: ' + str(e))
     def DeleteFlight(self, flightID):
         try:
             db = dbHelper(self.dataSource)
-            db.ExecuteCommand("DELETE Flight WHERE FlightID = " + flightID)
+            db.ExecuteCommand("DELETE FROM PASSENGER WHERE FlightID = " + str(flightID))
+            db.ExecuteCommand("DELETE FROM FLIGHT WHERE FlightID = " + str(flightID))
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
             self.HasError = False
@@ -168,13 +236,14 @@ class Flights(Models):
     def UpdateFlight(self, flightID, remarks):
         try:
             db = dbHelper(self.dataSource)
-            db.ExecuteCommand("UPDATE Flight SET REMARKS = '" + remarks + "' WHERE Flight = " + flightID)
+            db.ExecuteCommand("UPDATE Flight SET REMARKS = '" + remarks + "' WHERE FlightID = " + str(flightID))
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
             self.HasError = False
         except Exception as e:
             self.HasError = True
             self.ErrorMessage = str(e)
+            print('Update Flight Error: ' + str(e))
 
 #Location Class
 class Locations(Models):
@@ -203,7 +272,7 @@ class Locations(Models):
                         INNER JOIN COUNTRY ON COUNTRY.COUNTRYID = LOCATION.COUNTRYID 
                         WHERE LOCATION.LOCATIONID = '%s';''' %locationID
             db.ExecuteCommand(cmd)
-            self.locationID = db.DataTable
+            self.location = db.Data
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
             self.HasError = False
@@ -216,10 +285,10 @@ class Locations(Models):
             cmd = '''SELECT LOCATION.LOCATIONID FROM CITY 
                         INNER JOIN LOCATION ON CITY.CITYID = LOCATION.CITYID 
                         INNER JOIN COUNTRY ON COUNTRY.COUNTRYID = LOCATION.COUNTRYID 
-                        WHERE COUNTRY.COUNTRYNAME = '%s' AND
-                        WHERE CITY.CITYNAME = '%s';''' % (country, city)
+                        WHERE COUNTRY.COUNTRYNAME = '%s' 
+                        AND CITY.CITYNAME = '%s';''' % (country, city)
             db.ExecuteCommand(cmd)
-            self.locationID = db.DataTable
+            self.locationID = db.Data
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
             self.HasError = False
@@ -297,7 +366,7 @@ class Passengers(Models):
     def FindPassenger(self, passengerID):
         try:
             db = dbHelper(self.dataSource)
-            db.ExecuteCommand("SELECT * FROM PASSENGER WHERE PASSENGERID = " + passengerID)
+            db.ExecuteCommand("SELECT * FROM PASSENGER WHERE PASSENGERID = " + str(passengerID))
             self.flightPassenger = db.Data
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
@@ -326,10 +395,10 @@ class Passengers(Models):
         except Exception as e:
             self.HasError = True
             self.ErrorMessage = str(e)
-    def ViewUserPassengers(self, userID):
+    def ViewUserPassengers(self, userID, flightID):
         try:
             db = dbHelper(self.dataSource)
-            db.ExecuteCommand("SELECT * FROM PASSENGER WHERE USERID = " + userID)
+            db.ExecuteCommand("SELECT * FROM PASSENGER WHERE USERID = %s AND FLIGHTID = %s" %(str(userID), str(flightID)))
             self.userPassenger = db.DataTable
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
@@ -340,7 +409,7 @@ class Passengers(Models):
     def AddUserPassengers(self, passengerInfo):
         try:
             sqlCommand = '''
-                INSERT INTO Flight(FNAME, LNAME, GENDER, AGE, FLIGHTID, USERID) 
+                INSERT INTO PASSENGER(FNAME, LNAME, GENDER, AGE, FLIGHTID, USERID) 
                 VALUES(?,?,?,?,?,?)'''
             db = dbHelper(self.dataSource)
             db.ExecuteCommand(sqlCommand, passengerInfo)
@@ -353,12 +422,11 @@ class Passengers(Models):
     def ViewAvailableSeats(self, flightID):
         try:
             db = dbHelper(self.dataSource)
-            db.ExecuteCommand("SELECT SEATS FROM FLIGHT WHERE Flight = " + flightID)
-            self.__seats = db.Data
-            db.ExecuteCommand("SELECT * FROM PASSENGER WHERE Flight = " + flightID)
+            db.ExecuteCommand("SELECT SEATS FROM FLIGHT WHERE FlightID = " + str(flightID))
+            self.__seats = db.Data[0]
+            db.ExecuteCommand("SELECT * FROM PASSENGER WHERE FlightID = " + str(flightID))
             self.__taken = len(db.DataTable)
-            
-            self.availSeats = self.__seats - self.__taken
+            self.availSeats = int(self.__seats) - int(self.__taken)
 
             if(db.HasError):
                 raise Exception(db.ErrorMessage)
@@ -366,6 +434,7 @@ class Passengers(Models):
         except Exception as e:
             self.HasError = True
             self.ErrorMessage = str(e)
+            print(self.ErrorMessage)
 
 #Payments Class
 class Payments(Models):
@@ -403,8 +472,8 @@ class Payments(Models):
     def AddPayment(self, paymentInfo):
         try:
             sqlCommand = '''
-                INSERT INTO Flight(USERID, CARDNUMBER, CARD, EXPIRYDATE, CSC) 
-                VALUES(?,?,?,?,?)'''
+                INSERT INTO PAYMENT(USERID, CARDNUMBER, CARD, EXPIRYDATE, CSC, TOTALPRICE, FLIGHTID) 
+                VALUES(?,?,?,?,?,?,?)'''
             db = dbHelper(self.dataSource)
             db.ExecuteCommand(sqlCommand, paymentInfo)
             if(db.HasError):
