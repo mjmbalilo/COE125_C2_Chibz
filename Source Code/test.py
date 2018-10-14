@@ -1,3 +1,5 @@
-super_villains = {'Fiddler' : 'Isaac Bowin'}
-super_villains['Pied Piper'] = 'Hartley Rathaway'
-print(super_villains)
+PassengerInfo = {}
+PassengerInfo["Adult"] = [('a', 'b', 'c'), ('a', 'b', 'c')]
+PassengerInfo["Infant"] = [('a', 'b', 'c'), ('a', 'b', 'c')]
+
+print(PassengerInfo)
