@@ -2,6 +2,13 @@ from dbHelper import dbHelper
 
 db = dbHelper("db_FlightReservation.db")
 
+#Create admin table
+cmd = '''CREATE TABLE ADMIN(
+    ADMINID INTEGER NOT NULL,
+    USERNAME TEXT NOT NULL, 
+    PASSWORD TEXT NOT NULL);'''
+db.ExecuteCommand(cmd)
+
 #Create user table
 cmd = '''CREATE TABLE USER(
     USERID INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -65,7 +72,8 @@ cmd = '''CREATE TABLE PAYMENT(
     CARD TYPE TEXT NOT NULL,
     EXPIRYDATE TEXT NOT NULL,
     CSC TEXT NOT NULL,
-    TOTALPRICE REAL NOT NULL);'''
+   TOTALPRICE REAL NOT NULL,
+    FLIGHTID INTEGER NOT NULL);'''
 db.ExecuteCommand(cmd)
 
         
